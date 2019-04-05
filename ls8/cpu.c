@@ -82,6 +82,9 @@ void alu(struct cpu *cpu, enum alu_op op, unsigned char regA, unsigned char regB
     // TODO
     cpu->registers[regA] = cpu->registers[regA] * cpu->registers[regB];
     break;
+
+  case ALU_CMP:
+    break;
   default:
     fprintf(stderr, "Operation unrecognized\n");
     //exit(1);
@@ -148,6 +151,12 @@ void cpu_run(struct cpu *cpu)
       cpu_ram_write(cpu, cpu->registers[operandA], cpu->registers[operandB]);
       break;
 
+    case JMP:
+      break;
+    case JEQ:
+      break;
+    case JNE:
+      break;
     default:
       //break;
       alu(cpu, instruction, operandA, operandB);
@@ -184,6 +193,7 @@ void cpu_init(struct cpu *cpu)
 {
   // TODO: Initialize the PC and other special registers
   cpu->PC = 0;
+  cpu->FL = 0;
   memset(cpu->ram, 0, 256 * sizeof(unsigned char));
   memset(cpu->registers, 0, 8 * sizeof(unsigned char));
 }
