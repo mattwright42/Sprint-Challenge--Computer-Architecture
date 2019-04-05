@@ -8,11 +8,9 @@
 unsigned int cpu_ram_read(struct cpu *cpu, unsigned char index)
 {
   return cpu->ram[index];
-  //printf("This is read.\n");
 }
 void cpu_ram_write(struct cpu *cpu, unsigned char index, unsigned char val)
 {
-  //printf("This is write.\n");
   cpu->ram[index] = val;
 }
 
@@ -21,17 +19,6 @@ void cpu_ram_write(struct cpu *cpu, unsigned char index, unsigned char val)
  */
 void cpu_load(struct cpu *cpu, char *filename)
 {
-  //printf("This is load.\n");
-  // char data[DATA_LEN] = {
-  //     // From print8.ls8
-  //     0b10000010, // LDI R0,8
-  //     0b00000000,
-  //     0b00001000,
-  //     0b01000111, // PRN R0
-  //     0b00000000,
-  //     0b00000001 // HLT
-  // };
-
   FILE *fp;
   char line[1048];
 
@@ -42,9 +29,7 @@ void cpu_load(struct cpu *cpu, char *filename)
   {
     printf("Error opening file %s\n", filename);
     exit(2);
-    //return 2;
   }
-
   while (fgets(line, 1048, fp) != NULL)
   {
     char *endptr;
@@ -56,19 +41,6 @@ void cpu_load(struct cpu *cpu, char *filename)
     }
     cpu_ram_write(cpu, address++, val);
   }
-
-  // if (argc != 2)
-  // {
-  //   printf("usage: fileio filename\n");
-  //   //return 1;
-  // }
-
-  // for (int i = 0; i < DATA_LEN; i++)
-  // {
-  //   cpu->ram[address++] = data[i];
-  // }
-
-  // TODO: Replace this with something less hard-coded
 }
 
 /**
@@ -79,12 +51,10 @@ void alu(struct cpu *cpu, enum alu_op op, unsigned char regA, unsigned char regB
   switch (op)
   {
   case ALU_MUL:
-    // TODO
     cpu->registers[regA] = cpu->registers[regA] * cpu->registers[regB];
     break;
 
   case ALU_CMP:
-    //printf("here\n");
     if (cpu->registers[regA] == cpu->registers[regB])
     {
       cpu->FL = 0b00000001;
@@ -103,10 +73,7 @@ void alu(struct cpu *cpu, enum alu_op op, unsigned char regA, unsigned char regB
     break;
   default:
     fprintf(stderr, "Operation unrecognized\n");
-    //exit(1);
     break;
-
-    // TODO: implement more ALU ops
   }
 }
 
@@ -120,14 +87,11 @@ void cpu_run(struct cpu *cpu)
   unsigned char operandB;
   while (running)
   {
-    // TODO
     // 1. Get the value of the current instruction (in address PC).
-
     unsigned int instruction = cpu_ram_read(cpu, cpu->PC);
     operandA = cpu_ram_read(cpu, cpu->PC + 1);
     operandB = cpu_ram_read(cpu, cpu->PC + 2);
     unsigned int total_operands = instruction >> 6;
-    //printf("%u, %c, %c\n", instruction, operandA, operandB);
     // 2. Figure out how many operands this next instruction requires
     // 3. Get the appropriate value(s) of the operands following this instruction
     if (total_operands > 0)
@@ -177,7 +141,7 @@ void cpu_run(struct cpu *cpu)
       cpu->PC = cpu->registers[operandA];
       continue;
     case JEQ:
-      //printf("JEQ\n");
+
       if (cpu->FL == 0b00000001)
       {
         cpu->PC = cpu->registers[operandA];
@@ -207,29 +171,10 @@ void cpu_run(struct cpu *cpu)
  */
 void cpu_init(struct cpu *cpu)
 {
-  // TODO: Initialize the PC and other special registers
+  // Initialize the PC and other special registers
   cpu->PC = 0;
   cpu->FL = 0;
-  cpu->E = 0;
-  cpu->G = 0;
-  cpu->L = 0;
+
   memset(cpu->ram, 0, 256 * sizeof(unsigned char));
   memset(cpu->registers, 0, 8 * sizeof(unsigned char));
 }
-
-// {
-// case 0b10000010: //LDI
-//   printf("Operands: %d %d\n", operandA, operandB);
-//   cpu->registers[operandA] = operandB;
-//   break;
-// case 0b01000111: //PRN
-//   printf("%d\n", cpu->registers[operandA]);
-//   break;
-// case 0b00000001: //HLT
-//   running = 0;
-//   break;
-// default:
-//   printf("ERROR: invalid instruction.\n");
-//   exit(1);
-// };
-// printf("register 0: %d\n", cpu->registers[0]);

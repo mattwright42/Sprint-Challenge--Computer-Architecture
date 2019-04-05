@@ -4,19 +4,14 @@
 // Holds all information about the CPU
 struct cpu
 {
-  // TODO
-  // PC
   unsigned int PC;
   unsigned char FL;
   unsigned char E;
   unsigned char G;
   unsigned char L;
-  // unsigned int PC;
   // registers (array)
-  //unsigned char *registers;
   unsigned char registers[8];
   // ram (array)
-  //unsigned char *ram;
   unsigned char ram[256];
 };
 
@@ -24,7 +19,6 @@ struct cpu
 enum alu_op
 {
   ALU_MUL = 0b10100010,
-  // Add more here
   ALU_CMP = 0b10100111
 };
 
@@ -43,10 +37,9 @@ enum alu_op
 #define JMP 0b01010100
 #define JEQ 0b01010101
 #define JNE 0b01010110
-// TODO: more instructions here. These can be used in cpu_run().
 #define base_address 0x00
-// Function declarations
 
+// Function declarations
 extern void cpu_load(struct cpu *cpu, char *filename);
 extern void cpu_init(struct cpu *cpu);
 extern void cpu_run(struct cpu *cpu);
