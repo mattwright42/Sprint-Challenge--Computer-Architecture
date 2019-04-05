@@ -170,17 +170,19 @@ void cpu_run(struct cpu *cpu)
 
     case JMP:
       cpu->PC = cpu->registers[operandA];
-      break;
+      continue;
     case JEQ:
       if (cpu->E == 1)
       {
         cpu->PC = cpu->registers[operandA];
+        continue;
       }
       break;
     case JNE:
       if (cpu != 1)
       {
         cpu->PC = cpu->registers[operandA];
+        continue;
       }
       break;
     default:
