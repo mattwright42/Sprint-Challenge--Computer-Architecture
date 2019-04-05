@@ -172,6 +172,7 @@ void cpu_run(struct cpu *cpu)
       cpu->PC = cpu->registers[operandA];
       continue;
     case JEQ:
+      printf("JEQ\n");
       if (cpu->E == 1)
       {
         cpu->PC = cpu->registers[operandA];
@@ -179,6 +180,7 @@ void cpu_run(struct cpu *cpu)
       }
       break;
     case JNE:
+      printf("JNE\n");
       if (cpu != 1)
       {
         cpu->PC = cpu->registers[operandA];
@@ -186,7 +188,7 @@ void cpu_run(struct cpu *cpu)
       }
       break;
     default:
-      //break;
+      break;
       alu(cpu, instruction, operandA, operandB);
     }
     // 6. Move the PC to the next instruction.
