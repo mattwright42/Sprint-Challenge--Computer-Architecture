@@ -168,6 +168,7 @@ void cpu_run(struct cpu *cpu)
       break;
 
     case JMP:
+      cpu->PC = cpu->registers[operandA];
       break;
     case JEQ:
       break;
