@@ -8,6 +8,9 @@ struct cpu
   // PC
   unsigned int PC;
   unsigned char FL;
+  unsigned char E;
+  unsigned char G;
+  unsigned char L;
   // unsigned int PC;
   // registers (array)
   //unsigned char *registers;

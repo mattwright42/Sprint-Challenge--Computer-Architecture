@@ -84,6 +84,20 @@ void alu(struct cpu *cpu, enum alu_op op, unsigned char regA, unsigned char regB
     break;
 
   case ALU_CMP:
+    if (cpu->registers[regA] == cpu->registers[regB])
+    {
+      cpu->E = 1;
+      break;
+    }
+    else if (cpu->registers[regA] > cpu->registers[regB])
+    {
+      cpu->G = 1;
+    }
+    else
+    {
+      cpu->L;
+      break;
+    }
     break;
   default:
     fprintf(stderr, "Operation unrecognized\n");
@@ -113,7 +127,7 @@ void cpu_run(struct cpu *cpu)
     unsigned int total_operands = instruction >> 6;
     //printf("%u, %c, %c\n", instruction, operandA, operandB);
     // 2. Figure out how many operands this next instruction requires
-
+    // 3. Get the appropriate value(s) of the operands following this instruction
     if (total_operands > 0)
     {
       operandA = cpu_ram_read(cpu, cpu->PC + 1);
@@ -122,8 +136,10 @@ void cpu_run(struct cpu *cpu)
     {
       operandB = cpu_ram_read(cpu, cpu->PC + 2);
     }
+    // 4. switch() over it to decide on a course of action.
     switch (instruction)
     {
+      // 5. Do whatever the instruction should do according to the spec.
     case LDI:
       cpu->registers[operandA] = operandB;
       break;
@@ -161,28 +177,8 @@ void cpu_run(struct cpu *cpu)
       //break;
       alu(cpu, instruction, operandA, operandB);
     }
-    cpu->PC += total_operands + 1;
-    // {
-    // case 0b10000010: //LDI
-    //   printf("Operands: %d %d\n", operandA, operandB);
-    //   cpu->registers[operandA] = operandB;
-    //   break;
-    // case 0b01000111: //PRN
-    //   printf("%d\n", cpu->registers[operandA]);
-    //   break;
-    // case 0b00000001: //HLT
-    //   running = 0;
-    //   break;
-    // default:
-    //   printf("ERROR: invalid instruction.\n");
-    //   exit(1);
-    // };
-    // printf("register 0: %d\n", cpu->registers[0]);
-    // 3. Get the appropriate value(s) of the operands following this instruction
-
-    // 4. switch() over it to decide on a course of action.
-    // 5. Do whatever the instruction should do according to the spec.
     // 6. Move the PC to the next instruction.
+    cpu->PC += total_operands + 1;
   }
 }
 
@@ -194,6 +190,26 @@ void cpu_init(struct cpu *cpu)
   // TODO: Initialize the PC and other special registers
   cpu->PC = 0;
   cpu->FL = 0;
+  cpu->E = 0;
+  cpu->G = 0;
+  cpu->L = 0;
   memset(cpu->ram, 0, 256 * sizeof(unsigned char));
   memset(cpu->registers, 0, 8 * sizeof(unsigned char));
 }
+
+// {
+// case 0b10000010: //LDI
+//   printf("Operands: %d %d\n", operandA, operandB);
+//   cpu->registers[operandA] = operandB;
+//   break;
+// case 0b01000111: //PRN
+//   printf("%d\n", cpu->registers[operandA]);
+//   break;
+// case 0b00000001: //HLT
+//   running = 0;
+//   break;
+// default:
+//   printf("ERROR: invalid instruction.\n");
+//   exit(1);
+// };
+// printf("register 0: %d\n", cpu->registers[0]);
