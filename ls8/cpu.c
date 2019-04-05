@@ -171,6 +171,10 @@ void cpu_run(struct cpu *cpu)
       cpu->PC = cpu->registers[operandA];
       break;
     case JEQ:
+      if (cpu->E == 1)
+      {
+        cpu->PC = cpu->registers[operandA];
+      }
       break;
     case JNE:
       break;
