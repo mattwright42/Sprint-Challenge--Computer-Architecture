@@ -177,6 +177,10 @@ void cpu_run(struct cpu *cpu)
       }
       break;
     case JNE:
+      if (cpu != 1)
+      {
+        cpu->PC = cpu->registers[operandA];
+      }
       break;
     default:
       //break;
